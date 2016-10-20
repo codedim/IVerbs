@@ -32,6 +32,8 @@ Errors: <span id="er" class="badAns">0</span>&nbsp;&nbsp;
 <br>
 
 <div id="learn">
+<h4 id="demo">&nbsp;</h4>
+
 <audio controls>
  <source src="iverbs.mp3">
  <p>Error: Not supported!
@@ -79,7 +81,8 @@ function updateVerb() {
 
 	// show previous answer result
 	if (verbNmb > -1) {
-		var ansClass = (iverbs[verbNmb][1] == pastSimple.trim()) ? 'goodAns' : 'badAns';
+		var ansClass = (iverbs[verbNmb][1] == pastSimple.trim()) ? 
+			'goodAns' : 'badAns';
 		if (ansClass == 'badAns') { 
 			++errCount; 
 			errList.push(verbNmb); 
@@ -87,7 +90,8 @@ function updateVerb() {
 		var answerHtml = iverbs[verbNmb][0] + ' <span class="' + 
 			ansClass + '">' + iverbs[verbNmb][1];
 
-		ansClass = (iverbs[verbNmb][2] == pastParticiple.trim()) ? 'goodAns' : 'badAns';
+		ansClass = (iverbs[verbNmb][2] == pastParticiple.trim()) ? 
+			'goodAns' : 'badAns';
 		if (ansClass == 'badAns') { 
 			++errCount; 
 			if (errList[errList.length - 1] != verbNmb) errList.push(verbNmb); 
