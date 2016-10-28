@@ -1,116 +1,154 @@
 <!DOCTYPE html>
-<html>
-  
-  <head>
-    <title>HTML5 Audio Player </title>    
-    <!-- Uncomment the following meta tag if you have issues rendering this page on an intranet site. -->    
-    <!--  <meta http-equiv="X-UA-Compatible" content="IE=9"/> -->  
-    <script type="text/javascript">
-        // Global variable to track current file name.
-        var currentFile = "";
-        function playAudio() {
-            // Check for audio element support.
-            if (window.HTMLAudioElement) {
-                try {
-                    var oAudio = document.getElementById('myaudio');
-                    var btn = document.getElementById('play'); 
-                    var audioURL = document.getElementById('audiofile'); 
+<html><head>
+<title>HTML5 Audio Player </title>	
+<!-- uncomment the meta tag if you have issues rendering this page on an intranet site. -->	
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=9"/> -->
 
-                    //Skip loading if current file hasn't changed.
-                    if (audioURL.value !== currentFile) {
-                        oAudio.src = audioURL.value;
-                        currentFile = audioURL.value;                       
-                    }
+<script type="text/javascript">
+var iverbs = [ [ 'see', 'saw', 'seen' ], [ 'make', 'made', 'made' ], [ 'find', 'found', 'found' ], [ 'know', 'knew', 'known' ], [ 'get', 'got', 'gotten' ], [ 'go', 'went', 'gone' ], [ 'write', 'wrote', 'written' ], [ 'think', 'thought', 'thought' ], [ 'come', 'came', 'come' ], [ 'take', 'took', 'taken' ], [ 'put', 'put', 'put' ], [ 'tell', 'told', 'told' ], [ 'give', 'gave', 'given' ], [ 'read', 'read', 'read' ], [ 'keep', 'kept', 'kept' ], [ 'begin', 'began', 'begun' ], [ 'let', 'let', 'let' ], [ 'hear', 'heard', 'heard' ], [ 'cut', 'cut', 'cut' ], [ 'eat', 'ate', 'eaten' ], [ 'run', 'ran', 'run' ], [ 'bring', 'brought', 'brought' ], [ 'become', 'became', 'become' ], [ 'grow', 'grew', 'grown' ], [ 'draw', 'drew', 'drawn' ], [ 'show', 'showed', 'shown' ], [ 'mean', 'meant', 'meant' ], [ 'feel', 'felt', 'felt' ], [ 'hold', 'held', 'held' ], [ 'stand', 'stood', 'stood' ], [ 'understand', 'understood', 'understood' ], [ 'lose', 'lost', 'lost' ], [ 'catch', 'caught', 'caught' ], [ 'buy', 'bought', 'bought' ], [ 'send', 'sent', 'sent' ], [ 'fall', 'fell', 'fallen' ], [ 'choose', 'chose', 'chosen' ], [ 'sleep', 'slept', 'slept' ], [ 'speak', 'spoke', 'spoken' ], [ 'meet', 'met', 'met' ], [ 'lead', 'led', 'led' ], [ 'bite', 'bit', 'bitten' ], [ 'hit', 'hit', 'hit' ], [ 'drive', 'drove', 'driven' ], [ 'break', 'broke', 'broken' ], [ 'sit', 'sat', 'sat' ], [ 'spend', 'spent', 'spent' ], [ 'ring', 'rang', 'rung' ], [ 'wear', 'wore', 'worn' ], [ 'sell', 'sold', 'sold' ], [ 'beat', 'beat', 'beaten' ], [ 'win', 'won', 'won' ], [ 'hurt', 'hurt', 'hurt' ], [ 'sing', 'sang', 'sung' ], [ 'blow', 'blew', 'blown' ], [ 'rise', 'rose', 'risen' ], [ 'ride', 'rode', 'ridden' ], [ 'fly', 'flew', 'flown' ], [ 'drink', 'drank', 'drunk' ], [ 'forget', 'forgot', 'forgotten' ], [ 'throw', 'threw', 'thrown' ], [ 'hang', 'hung', 'hung' ], [ 'swim', 'swam', 'swum' ] ];
+var currentFile = ''; // global var to track current file name
+var playTimer;
 
-                    // Tests the paused attribute and set state. 
-                    if (oAudio.paused) {
-                        oAudio.play();
-                        btn.textContent = "Pause";
-                    }
-                    else {
-                        oAudio.pause();
-                        btn.textContent = "Play";
-                    }
-                }
-                catch (e) {
-                    // Fail silently but show in F12 developer tools console
-                     if(window.console && console.error("Error:" + e));
-                }
-            }
-        }
-             // Rewinds the audio file by 30 seconds.
+window.onload = function() {
+	updateTrackBar();
 
-        function rewindAudio() {
-             // Check for audio element support.
-            if (window.HTMLAudioElement) {
-                try {
-                    var oAudio = document.getElementById('myaudio');
-                    oAudio.currentTime -= 30.0;
-                }
-                catch (e) {
-                    // Fail silently but show in F12 developer tools console
-                     if(window.console && console.error("Error:" + e));
-                }
-            }
-        }
+	var array = document.getElementById('array');
+	if (array) for (i = 0; iverbs.length; ++i) {
+		array.innerHTML += '[ \'' + iverbs[i][0] + '\', \'' + iverbs[i][1] + 
+			'\', \'' + iverbs[i][2] + '\', * ], ';
+	}
+}
 
-             // Fast forwards the audio file by 30 seconds.
+function addOffset() {
+	var array = document.getElementById('array');
+	var objAudio = document.getElementById('audioTag');
+	var indx = array.innerHTML.indexOf('*');
+	if (indx > 0) {
+		var preStr = array.innerHTML.substr(0, indx);
+		var postStr = array.innerHTML.substr(indx + 1, 
+			array.innerHTML.length);
+		var offset = objAudio.currentTime;
+		if (offset > 0) {
+			offset = String(offset);
+			indx = offset.indexOf('.');
+			if (indx > -1)
+				offset = offset.substr(0, indx) + offset.substr(indx, 3);
+		}
+		array.innerHTML = preStr + offset + postStr;
+	}
+}
 
-        function forwardAudio() {
+// starts or stops an audio file playing
+function playAudio() {
+	// check for audio element support
+	if (!window.HTMLAudioElement) return;
+	// and try to play the content out
+	try {
+		var objAudio = document.getElementById('audioTag');
+		var btnPlay = document.getElementById('playAudio'); 
+		var audioURL = document.getElementById('audioFile'); 
+				
+		// skip loading if current file hasn't changed
+		if (audioURL.value !== currentFile) {
+			objAudio.src = audioURL.value;
+			currentFile = audioURL.value;
+			updateTrackBar();
+		}
 
-             // Check for audio element support.
-            if (window.HTMLAudioElement) {
-                try {
-                    var oAudio = document.getElementById('myaudio');
-                    oAudio.currentTime += 30.0;
-                }
-                catch (e) {
-                    // Fail silently but show in F12 developer tools console
-                     if(window.console && console.error("Error:" + e));
-                }
-            }
-        }
+		// tests the paused attribute and set state
+		if (objAudio.paused) {
+			objAudio.play();
+			btnPlay.textContent = "Pause";
+			playTimer = setInterval(updateTrackBar, 100);
+		}
+		else {
+			objAudio.pause();
+			btnPlay.textContent = "Play";
+			clearInterval(playTimer);
+		}
+	}
+	catch (e) {
+		// fail silently but show in developer tools console
+		if(window.console && console.error("Error:" + e));
+	}
+}
 
-             // Restart the audio file to the beginning.
+// manages track bar content
+function updateTrackBar() {
+	if (!window.HTMLAudioElement) return;
 
-        function restartAudio() {
-             // Check for audio element support.
-            if (window.HTMLAudioElement) {
-                try {
-                    var oAudio = document.getElementById('myaudio');
-                    oAudio.currentTime = 0;
-                }
-                catch (e) {
-                    // Fail silently but show in F12 developer tools console
-                     if(window.console && console.error("Error:" + e));
-               }
-            }
-        }
-            
-    </script>
-  </head>
-  
-  <body>
-    <p>
-      <input type="text" id="audiofile" size="80" value="demo.mp3" />
-    </p>
-    <audio id="myaudio">
-      HTML5 audio not supported
-    </audio>
-    <button id="play" onclick="playAudio();">
-      Play
-    </button>
-    
-    <button onclick="rewindAudio();">
-      Rewind
-    </button>
-    <button onclick="forwardAudio();">
-      Fast forward
-    </button>
-    <button onclick="restartAudio();">
-      Restart
-    </button>
+	var objAudio = document.getElementById('audioTag');
+	var trackBar = document.getElementById('trackBar');
+	if (objAudio && trackBar) {
+		trackBar.innerHTML = formatTimeStr(objAudio.currentTime) + 
+			' | ' + formatTimeStr(objAudio.duration);
+		// the file plaing is over
+		if (objAudio.currentTime == objAudio.duration) 
+			clearInterval(playTimer);
+	}
 
-  </body>
+	// formats to '00:00:00.00'
+	function formatTimeStr(sec) {
+		if (!sec) return '00:00:00.00';
+		var h = sec / 1200 | 0;	if (h <= 9) h = '0' + h;
+		var m = sec / 60 | 0;	if (m <= 9) m = '0' + m;
+		var s = sec % 60;		if (s < 10) s = '0' + s;
+		return h + ':' + m + ':' + String(s).substr(0, 5);
+	}
+}
 
-</html>
+
+// rewinds the audio file by 30 seconds
+function rewindAudio() {
+	if (!window.HTMLAudioElement) return;
+	try {
+		var objAudio = document.getElementById('audioTag');
+		objAudio.currentTime -= 30.0;
+	}
+	catch (e) {
+		 if(window.console && console.error("Error:" + e));
+	}
+}
+
+// fast forwards the audio file by 30 seconds.
+function forwardAudio() {
+	if (!window.HTMLAudioElement) return;
+	try {
+		var objAudio = document.getElementById('audioTag');
+		objAudio.currentTime += 30.0;
+	}
+	catch (e) {
+		if(window.console && console.error("Error:" + e));
+	}
+}
+
+// restart the audio file to the beginning
+function restartAudio() {
+	if (window.HTMLAudioElement) {
+		try {
+			var objAudio = document.getElementById('audioTag');
+			objAudio.currentTime = 0;
+		}
+		catch (e) {
+			if(window.console && console.error("Error:" + e));
+	 }
+	}
+}
+</script>
+</head><body>
+<p>
+	<input type="text" id="audioFile" size="60" value="iverbs.mp3" />
+</p>
+<p>
+	<audio id="audioTag">HTML5 audio not supported</audio>
+	<button id="playAudio" onclick="playAudio();">Play</button>
+	<button onclick="rewindAudio();">&lt;&lt;</button>
+	<button onclick="forwardAudio();">&gt;&gt;</button>
+	<button onclick="restartAudio();">Restart</button>
+	<code id="trackBar"></code>
+</p>
+<p>
+	<button onclick="addOffset();">addOffset</button>
+</p>
+<code><div id="array"></div></code>
+</body></html>

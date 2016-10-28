@@ -6,50 +6,72 @@
 <style>
  body { font-family: sans-serif }
  input, h4 { font-size: 12pt; font-weight: bold }
- h3, h4 { margin: 10px 0px 5px}
+ h3, h4 { margin: 10px 0px 5px; text-align: center }
+ #play { position: absolute; display: none; }
+ #word { color: #337 }
+ #correct, #total { color: #333; }
  .badAns { color: red }
  .goodAns { color: green }
- #fixm { display: none }
- div#quiz, div#learn { display: inline-block; background-color: #eee; }
+ #totals { display: none }
+ #fixme { display: none }
+ div#quiz, div#learn { 
+ 	display: inline-block; width: 300px; 
+ 	padding: 6px;
+ 	background-color: #eee; 
+ }
  button#mode { width: 100%; font-size: 11pt }
+ #audioTag { color: #e00; }
 </style>
 </head><body>
 
 <div id="quiz">
-<h3>Quiz: English irregular verbs</h3>
-<form method="post" onsubmit="return updateVerb()">
-<h4 id="verb"></h4>
-<input type="text" id="ps" size="9" maxlength="10" autocomplete="off" name="PastSimple" />
-<input type="text" id="pp" size="9" maxlength="10" autocomplete="off" name="PastParticiple" />
+<h3 id="capture">Quiz: English irregular verbs</h3>
+<h4 id="word"></h4>
+<form id="answer" method="post" onsubmit="return updateQuizWord()">
+<input type="text" id="ps" size="10" maxlength="12" autocomplete="off" name="PastSimple" />
+<input type="text" id="pp" size="10" maxlength="12" autocomplete="off" name="PastParticiple" />
 <input type="submit" value="&gt;" />
 </form>
-<h4 id="answ">&nbsp; <span class=""></span> <span class=""></span></h4>
-<h4>Attempts: <span id="at" class="goodAns">0</span>&nbsp;&nbsp;
-Errors: <span id="er" class="badAns">0</span>&nbsp;&nbsp;
-<a id="fixm" href="javascript:void(0)" onclick="fixMistakes()">correct</a></h4>
-<p><button id="mode">Learn</button>
+<div id="play">
+ <button id="playBtn" onclick="playLearning();">Play</button>
+ <button onclick="rewindAudio();">&lt;&lt;</button>
+ <button onclick="forwardAudio();">&gt;&gt;</button>
+ &nbsp;&nbsp;<code id="trackBar"></code>
 </div>
-<br>
-
-<div id="learn">
-<h4 id="demo">&nbsp;</h4>
-
-<audio controls>
- <source src="iverbs.mp3">
- <p>Error: Not supported!
-</audio>
+<h4 id="correct">&nbsp; <span class=""></span> <span class=""></span></h4>
+<h4 id="attempts">Attempts: <span id="at" class="goodAns">0</span>&nbsp;&nbsp;
+ Errors: <span id="er" class="badAns">0</span>&nbsp;&nbsp;
+ <a id="fixme" href="javascript:void(0)" onclick="fixMistakes()">correct</a></h4>
+<h4 id="totals">Word: <span id="cw" class="goodAns">0</span>&nbsp;&nbsp;
+ Total: <span id="tw" class="goodAns">0</span></h4>
+<p><button id="mode" onclick="switchMode();">Learn</button>
 </div>
+
+<audio id="audioTag">HTML5 audio not supported!</audio>
 
 <script>
-var iverbs = [ [ 'see', 'saw', 'seen' ], [ 'make', 'made', 'made' ], [ 'find', 'found', 'found' ], [ 'know', 'knew', 'known' ], [ 'get', 'got', 'gotten' ], [ 'go', 'went', 'gone' ], [ 'write', 'wrote', 'written' ], [ 'think', 'thought', 'thought' ], [ 'come', 'came', 'come' ], [ 'take', 'took', 'taken' ], [ 'put', 'put', 'put' ], [ 'tell', 'told', 'told' ], [ 'give', 'gave', 'given' ], [ 'read', 'read', 'read' ], [ 'keep', 'kept', 'kept' ], [ 'begin', 'began', 'begun' ], [ 'let', 'let', 'let' ], [ 'hear', 'heard', 'heard' ], [ 'cut', 'cut', 'cut' ], [ 'eat', 'ate', 'eaten' ], [ 'run', 'ran', 'run' ], [ 'bring', 'brought', 'brought' ], [ 'become', 'became', 'become' ], [ 'grow', 'grew', 'grown' ], [ 'draw', 'drew', 'drawn' ], [ 'show', 'showed', 'shown' ], [ 'mean', 'meant', 'meant' ], [ 'feel', 'felt', 'felt' ], [ 'hold', 'held', 'held' ], [ 'stand', 'stood', 'stood' ], [ 'understand', 'understood', 'understood' ], [ 'lose', 'lost', 'lost' ], [ 'catch', 'caught', 'caught' ], [ 'buy', 'bought', 'bought' ], [ 'send', 'sent', 'sent' ], [ 'fall', 'fell', 'fallen' ], [ 'choose', 'chose', 'chosen' ], [ 'sleep', 'slept', 'slept' ], [ 'speak', 'spoke', 'spoken' ], [ 'meet', 'met', 'met' ], [ 'lead', 'led', 'led' ], [ 'bite', 'bit', 'bitten' ], [ 'hit', 'hit', 'hit' ], [ 'drive', 'drove', 'driven' ], [ 'break', 'broke', 'broken' ], [ 'sit', 'sat', 'sat' ], [ 'spend', 'spent', 'spent' ], [ 'ring', 'rang', 'rung' ], [ 'wear', 'wore', 'worn' ], [ 'sell', 'sold', 'sold' ], [ 'beat', 'beat', 'beaten' ], [ 'win', 'won', 'won' ], [ 'hurt', 'hurt', 'hurt' ], [ 'sing', 'sang', 'sung' ], [ 'blow', 'blew', 'blown' ], [ 'rise', 'rose', 'risen' ], [ 'ride', 'rode', 'ridden' ], [ 'fly', 'flew', 'flown' ], [ 'drink', 'drank', 'drunk' ], [ 'forget', 'forgot', 'forgotten' ], [ 'throw', 'threw', 'thrown' ], [ 'hang', 'hung', 'hung' ], [ 'swim', 'swam', 'swum' ] ];
-var verb = document.getElementById('verb');
-var answer = document.getElementById('answ');
+topic = 'English irregular verbs';
+
+var iverbs = [ [ 'see', 'saw', 'seen', 0 ], [ 'make', 'made', 'made', 4.24 ], [ 'find', 'found', 'found', 13.96 ], [ 'know', 'knew', 'known', 23.57 ], [ 'get', 'got', 'gotten', 32.72 ], [ 'go', 'went', 'gone', 42.35 ], [ 'write', 'wrote', 'written', 51.89 ], [ 'think', 'thought', 'thought', 61.77 ], [ 'come', 'came', 'come', 70.86 ], [ 'take', 'took', 'taken', 80.60 ], [ 'put', 'put', 'put', 85.14 ], [ 'tell', 'told', 'told', 89.79 ], [ 'give', 'gave', 'given', 94.56 ], [ 'read', 'read', 'read', 99.05 ], [ 'keep', 'kept', 'kept', 103.59 ], [ 'begin', 'began', 'begun', 108.28 ], [ 'let', 'let', 'let', 112.94 ], [ 'hear', 'heard', 'heard', 117.57 ], [ 'cut', 'cut', 'cut', 122.20 ], [ 'eat', 'ate', 'eaten', 126.73 ], [ 'run', 'ran', 'run', 131.25 ], [ 'bring', 'brought', 'brought', 135.97 ], [ 'become', 'became', 'become', 140.69 ], [ 'grow', 'grew', 'grown', 145.15 ], [ 'draw', 'drew', 'drawn', 149.86 ], [ 'show', 'showed', 'shown', 154.56 ], [ 'mean', 'meant', 'meant', 159.08 ], [ 'feel', 'felt', 'felt', 163.73 ], [ 'hold', 'held', 'held', 170.88 ], [ 'stand', 'stood', 'stood', 176.01 ], [ 'understand', 'understood', 'understood', 181.67 ], [ 'lose', 'lost', 'lost', 186.64 ], [ 'catch', 'caught', 'caught', 191.65 ], [ 'buy', 'bought', 'bought', 197.69 ], [ 'send', 'sent', 'sent', 202.61 ], [ 'fall', 'fell', 'fallen', 207.97 ], [ 'choose', 'chose', 'chosen', 213.43 ], [ 'sleep', 'slept', 'slept', 218.71 ], [ 'speak', 'spoke', 'spoken', 224.00 ], [ 'meet', 'met', 'met', 229.35 ], [ 'lead', 'led', 'led', 234.59 ], [ 'bite', 'bit', 'bitten', 239.94 ], [ 'hit', 'hit', 'hit', 245.25 ], [ 'drive', 'drove', 'driven', 250.56 ], [ 'break', 'broke', 'broken', 255.88 ], [ 'sit', 'sat', 'sat', 261.34 ], [ 'spend', 'spent', 'spent', 266.64 ], [ 'ring', 'rang', 'rung', 271.47 ], [ 'wear', 'wore', 'worn', 276.33 ], [ 'sell', 'sold', 'sold', 281.19 ], [ 'beat', 'beat', 'beaten', 285.94 ], [ 'win', 'won', 'won', 290.78 ], [ 'hurt', 'hurt', 'hurt', 295.73 ], [ 'sing', 'sang', 'sung', 300.37 ], [ 'blow', 'blew', 'blown', 305.36 ], [ 'rise', 'rose', 'risen', 310.34 ], [ 'ride', 'rode', 'ridden', 314.88 ], [ 'fly', 'flew', 'flown', 319.65 ], [ 'drink', 'drank', 'drunk', 324.52 ], [ 'forget', 'forgot', 'forgotten', 329.26 ], [ 'throw', 'threw', 'thrown', 334.05 ], [ 'hang', 'hung', 'hung', 338.96 ], [ 'swim', 'swam', 'swum', 343.68 ] ];
+
+var capture = document.getElementById('capture');
+var currentWord = document.getElementById('word');
+var correctAnswer = document.getElementById('correct');
+var totalAttempt = document.getElementById('attempts');
+var totalResult = document.getElementById('totals');
+var answerForm = document.getElementById('answer');
 var inputPastSimple = document.getElementById('ps');
 var inputPastParticiple = document.getElementById('pp');
-var fixLink = document.getElementById('fixm');
+var fixmeLink = document.getElementById('fixme');
+var modeBtn =  document.getElementById('mode');
+var playBtns = document.getElementById('play');
+var playBtn = document.getElementById('playBtn');
+var objAudio = document.getElementById('audioTag');
+objAudio.src = 'iverbs.mp3';
+var stopTimer, playTimer;
 
 var keyFlag; // "enter was pressed on the element" flag
-var verbNmb = -1;
+var wordNmb = -1;
 var errNmb = 0;
 var attemptCount = 0;
 var errCount = 0;
@@ -57,7 +79,7 @@ var errList = []; // array to store failed answers
 var testMode = 'quiz'; // mode of the test: 'common quiz' or 'correct mistakes'
 
 window.onload = function() {
-	updateVerb();
+	updateQuizWord();
 
 	inputPastSimple.onkeydown = function() {
 		keyFlag = inputPastSimple;
@@ -67,7 +89,106 @@ window.onload = function() {
 	}
 }
 
-function updateVerb() {
+function switchMode() {
+	// initialization
+	objAudio.pause();
+	objAudio.currentTime = 0;
+	clearTimeout(stopTimer);
+	clearInterval(playTimer);
+	wordNmb = -1;
+	errNmb = 0;
+	attemptCount = 0;
+	errCount = 0;
+	errList = []; 
+	testMode = 'quiz';
+	currentWord.innerHTML = '&nbsp;';
+	correctAnswer.innerHTML = '&nbsp;';
+	fixmeLink.style.display = 'none';
+
+	if (modeBtn.innerHTML == 'Learn') {
+	// switch to Learn mode
+		capture.innerHTML = 'Learn: ' + topic;
+		modeBtn.innerHTML = 'Quiz';
+		answerForm.style.visibility = 'hidden';
+		totalResult.style.display = 'block';
+		totalAttempt.style.display = 'none';
+		document.getElementById('tw').innerHTML = iverbs.length;
+		playBtns.style.display = 'block';
+	} else {
+	// switch to Quiz mode
+		capture.innerHTML = 'Quiz: ' + topic;
+		modeBtn.innerHTML = 'Learn';
+		answerForm.style.visibility = 'visible';
+		totalResult.style.display = 'none';
+		totalAttempt.style.display = 'block';
+		playBtns.style.display = 'none';
+		updateQuizWord();
+	}
+}
+
+function playLearning() {
+	if (objAudio.paused) {
+		objAudio.play();
+		playBtn.textContent = "Pause";
+		playTimer = setInterval(updateLearningWords, 100);
+	}
+	else {
+		objAudio.pause();
+		playBtn.textContent = "Play";
+		clearInterval(playTimer);
+	}
+}
+
+function updateLearningWords() {
+	var wordIdx = iverbs.length - 1;
+	var word = iverbs[wordIdx]; // last item from array
+
+	for (i = 0; i < iverbs.length - 1; ++i) 
+		if ( (iverbs[i][3] < objAudio.currentTime) && 
+			(iverbs[i + 1][3] > objAudio.currentTime) ) 
+		{
+			word = iverbs[i];
+			wordIdx = i;
+		}
+
+	currentWord.innerHTML = word[0] + ' ' + word[1] + ' ' + word[2];
+	document.getElementById('cw').innerHTML = wordIdx + 1;
+	updateTrackBar();
+}
+
+function updateTrackBar() {
+	var trackBar = document.getElementById('trackBar');
+	if (objAudio && trackBar) {
+		// the file plaing is over
+		if (objAudio.currentTime == objAudio.duration) {
+			clearInterval(playTimer);
+			objAudio.currentTime = 0;
+			playBtn.textContent = "Play";
+		}
+		// uplate track bar
+		trackBar.innerHTML = formatTimeStr(objAudio.currentTime) + 
+			'|' + formatTimeStr(objAudio.duration);		
+	}
+
+	// formats to '00:00:00.00'
+	function formatTimeStr(sec) {
+		if (!sec) return '00:00:00.00';
+		var h = sec / 1200 | 0;	if (h <= 9) h = '0' + h;
+		var m = sec / 60 | 0;	if (m <= 9) m = '0' + m;
+		var s = sec % 60;		if (s < 10) s = '0' + s;
+		return h + ':' + m + ':' + String(s).substr(0, 5);
+	}
+}
+
+function rewindAudio() {
+	objAudio.currentTime -= 30.0;
+}
+
+function forwardAudio() {
+	objAudio.currentTime += 30.0;
+}
+
+function updateQuizWord() {
 	// if 'submit' event (Enter is pressed) is from the first imput
 	if (keyFlag == inputPastSimple) {
 		inputPastParticiple.setSelectionRange(0, 10);
@@ -79,49 +200,60 @@ function updateVerb() {
 	var pastSimple = inputPastSimple.value;
 	var pastParticiple = inputPastParticiple.value;
 
-	// show previous answer result
-	if (verbNmb > -1) {
-		var ansClass = (iverbs[verbNmb][1] == pastSimple.trim()) ? 
+	// show previous correct answer result
+	if (wordNmb > -1) {
+		var ansClass = (iverbs[wordNmb][1] == pastSimple.trim()) ? 
 			'goodAns' : 'badAns';
 		if (ansClass == 'badAns') { 
 			++errCount; 
-			errList.push(verbNmb); 
+			errList.push(wordNmb); 
 		}
-		var answerHtml = iverbs[verbNmb][0] + ' <span class="' + 
-			ansClass + '">' + iverbs[verbNmb][1];
+		var answerHtml = iverbs[wordNmb][0] + ' <span class="' + 
+			ansClass + '">' + iverbs[wordNmb][1];
 
-		ansClass = (iverbs[verbNmb][2] == pastParticiple.trim()) ? 
+		ansClass = (iverbs[wordNmb][2] == pastParticiple.trim()) ? 
 			'goodAns' : 'badAns';
 		if (ansClass == 'badAns') { 
 			++errCount; 
-			if (errList[errList.length - 1] != verbNmb) errList.push(verbNmb); 
+			if (errList[errList.length - 1] != wordNmb) errList.push(wordNmb); 
 		}
 		answerHtml += '</span> <span class="' + ansClass + '">' + 
-			iverbs[verbNmb][2] + '</span>';
+			iverbs[wordNmb][2] + '</span>';
 
-		answer.innerHTML = answerHtml;
+		// show words
+		correctAnswer.innerHTML = answerHtml;
+		// play words
+		objAudio.currentTime = iverbs[wordNmb][3];
+		objAudio.play();
+		var duration = (wordNmb < iverbs.length - 1) ? 
+			iverbs[wordNmb + 1][3] : objAudio.duration;
+		duration -= iverbs[wordNmb][3];
+		setTimeout(function() {
+			objAudio.pause();
+		}, duration * 1000);
 	}
 
-	// get a new verb
-	if (testMode == 'quiz') {
-		verbNmb = Math.floor( Math.random() * iverbs.length );
-	} else {
-		if (errNmb == errList.length) {
-			alert('All mistakes are corrected!');
-			return true;
+	// get a new word
+	stopTimer = setTimeout(function() {
+		if (testMode == 'quiz') {
+			wordNmb = Math.floor( Math.random() * iverbs.length );
+		} else {
+			if (errNmb == errList.length) {
+				alert('All mistakes are corrected.\nWell done!');
+				return true;
+			}
+			wordNmb = errList[errNmb++];
 		}
-		verbNmb = errList[errNmb++];
-	}
-	verb.innerHTML = iverbs[verbNmb][0];	
-
-	// set focus to PastSimple imput
-	inputPastSimple.setSelectionRange(0, 10);
-	inputPastSimple.focus();
+		currentWord.innerHTML = iverbs[wordNmb][0];	
+		// set focus to PastSimple imput
+		inputPastSimple.setSelectionRange(0, 10);
+		inputPastSimple.focus();
+	}, duration * 1000);
 
 	// show statistics
 	document.getElementById('at').innerHTML = attemptCount++;
 	document.getElementById('er').innerHTML = errCount;
-	if (errCount > 2) fixLink.style.display = 'inline';
+	if (errCount > 2) fixmeLink.style.display = 'inline';
 
 	return false;
 }
@@ -129,10 +261,10 @@ function updateVerb() {
 function fixMistakes() {
 	errCount = 0;
 	errNmb = 0;
-	verbNmb = -1;
+	wordNmb = -1;
 	testMode = 'correct';
-	fixLink.style.display = 'none';
-	updateVerb();
+	fixmeLink.style.display = 'none';
+	updateQuizWord();
 }
 </script> 
 </body></html>
