@@ -7,7 +7,15 @@
  body { font-family: sans-serif }
  input, h4 { font-size: 12pt; font-weight: bold }
  h3, h4 { margin: 10px 0px 5px; text-align: center }
- #play { position: absolute; display: none; }
+ #player { position: absolute; width: 300px; display: none; }
+ #playBtn { 
+ 	height: 24px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-image: url("data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><path d='M 3 18 L 3 4 L 17 11 L 3 18' fill='silver' stroke='grey' stroke-width='2' /></svg>"); 
+}
+ #rewBtn { float: left }
+ #frwBtn { float: right }
  #word { color: #337 }
  #correct, #total { color: #333; }
  .badAns { color: red }
@@ -22,6 +30,7 @@
  button#mode { width: 100%; font-size: 11pt }
  #audioTag { color: #e00; }
 </style>
+<script type="text/javascript" src="iverbs.js"></script>
 </head><body>
 
 <div id="quiz">
@@ -32,11 +41,11 @@
 <input type="text" id="pp" size="10" maxlength="12" autocomplete="off" name="PastParticiple" />
 <input type="submit" value="&gt;" />
 </form>
-<div id="play">
- <button id="playBtn" onclick="playLearning();">Play</button>
- <button onclick="rewindAudio();">&lt;&lt;</button>
- <button onclick="forwardAudio();">&gt;&gt;</button>
- &nbsp;&nbsp;<code id="trackBar"></code>
+<div id="player">
+ <button id="playBtn" onclick="playLearning();">&nbsp;&nbsp;</button>
+ &nbsp;&nbsp;<code id="trackBar"></code><p>
+ <button id="rewBtn" onclick="rewindAudio();">&lt;&lt;</button>
+ <button id="frwBtn" onclick="forwardAudio();">&gt;&gt;</button>
 </div>
 <h4 id="correct">&nbsp; <span class=""></span> <span class=""></span></h4>
 <h4 id="attempts">Attempts: <span id="at" class="goodAns">0</span>&nbsp;&nbsp;
@@ -46,13 +55,9 @@
  Total: <span id="tw" class="goodAns">0</span></h4>
 <p><button id="mode" onclick="switchMode();">Learn</button>
 </div>
-
 <audio id="audioTag">HTML5 audio not supported!</audio>
 
 <script>
-topic = 'English irregular verbs';
-
-var iverbs = [ [ 'see', 'saw', 'seen', 0 ], [ 'make', 'made', 'made', 4.24 ], [ 'find', 'found', 'found', 13.96 ], [ 'know', 'knew', 'known', 23.57 ], [ 'get', 'got', 'gotten', 32.72 ], [ 'go', 'went', 'gone', 42.35 ], [ 'write', 'wrote', 'written', 51.89 ], [ 'think', 'thought', 'thought', 61.77 ], [ 'come', 'came', 'come', 70.86 ], [ 'take', 'took', 'taken', 80.60 ], [ 'put', 'put', 'put', 85.14 ], [ 'tell', 'told', 'told', 89.79 ], [ 'give', 'gave', 'given', 94.56 ], [ 'read', 'read', 'read', 99.05 ], [ 'keep', 'kept', 'kept', 103.59 ], [ 'begin', 'began', 'begun', 108.28 ], [ 'let', 'let', 'let', 112.94 ], [ 'hear', 'heard', 'heard', 117.57 ], [ 'cut', 'cut', 'cut', 122.20 ], [ 'eat', 'ate', 'eaten', 126.73 ], [ 'run', 'ran', 'run', 131.25 ], [ 'bring', 'brought', 'brought', 135.97 ], [ 'become', 'became', 'become', 140.69 ], [ 'grow', 'grew', 'grown', 145.15 ], [ 'draw', 'drew', 'drawn', 149.86 ], [ 'show', 'showed', 'shown', 154.56 ], [ 'mean', 'meant', 'meant', 159.08 ], [ 'feel', 'felt', 'felt', 163.73 ], [ 'hold', 'held', 'held', 170.88 ], [ 'stand', 'stood', 'stood', 176.01 ], [ 'understand', 'understood', 'understood', 181.67 ], [ 'lose', 'lost', 'lost', 186.64 ], [ 'catch', 'caught', 'caught', 191.65 ], [ 'buy', 'bought', 'bought', 197.69 ], [ 'send', 'sent', 'sent', 202.61 ], [ 'fall', 'fell', 'fallen', 207.97 ], [ 'choose', 'chose', 'chosen', 213.43 ], [ 'sleep', 'slept', 'slept', 218.71 ], [ 'speak', 'spoke', 'spoken', 224.00 ], [ 'meet', 'met', 'met', 229.35 ], [ 'lead', 'led', 'led', 234.59 ], [ 'bite', 'bit', 'bitten', 239.94 ], [ 'hit', 'hit', 'hit', 245.25 ], [ 'drive', 'drove', 'driven', 250.56 ], [ 'break', 'broke', 'broken', 255.88 ], [ 'sit', 'sat', 'sat', 261.34 ], [ 'spend', 'spent', 'spent', 266.64 ], [ 'ring', 'rang', 'rung', 271.47 ], [ 'wear', 'wore', 'worn', 276.33 ], [ 'sell', 'sold', 'sold', 281.19 ], [ 'beat', 'beat', 'beaten', 285.94 ], [ 'win', 'won', 'won', 290.78 ], [ 'hurt', 'hurt', 'hurt', 295.73 ], [ 'sing', 'sang', 'sung', 300.37 ], [ 'blow', 'blew', 'blown', 305.36 ], [ 'rise', 'rose', 'risen', 310.34 ], [ 'ride', 'rode', 'ridden', 314.88 ], [ 'fly', 'flew', 'flown', 319.65 ], [ 'drink', 'drank', 'drunk', 324.52 ], [ 'forget', 'forgot', 'forgotten', 329.26 ], [ 'throw', 'threw', 'thrown', 334.05 ], [ 'hang', 'hung', 'hung', 338.96 ], [ 'swim', 'swam', 'swum', 343.68 ] ];
 
 var capture = document.getElementById('capture');
 var currentWord = document.getElementById('word');
@@ -64,7 +69,7 @@ var inputPastSimple = document.getElementById('ps');
 var inputPastParticiple = document.getElementById('pp');
 var fixmeLink = document.getElementById('fixme');
 var modeBtn =  document.getElementById('mode');
-var playBtns = document.getElementById('play');
+var player = document.getElementById('player');
 var playBtn = document.getElementById('playBtn');
 var objAudio = document.getElementById('audioTag');
 objAudio.src = 'iverbs.mp3';
@@ -107,21 +112,21 @@ function switchMode() {
 
 	if (modeBtn.innerHTML == 'Learn') {
 	// switch to Learn mode
-		capture.innerHTML = 'Learn: ' + topic;
+		capture.innerHTML = 'Learn: ' + iverbsTopic;
 		modeBtn.innerHTML = 'Quiz';
 		answerForm.style.visibility = 'hidden';
 		totalResult.style.display = 'block';
 		totalAttempt.style.display = 'none';
 		document.getElementById('tw').innerHTML = iverbs.length;
-		playBtns.style.display = 'block';
+		player.style.display = 'block';
 	} else {
 	// switch to Quiz mode
-		capture.innerHTML = 'Quiz: ' + topic;
+		capture.innerHTML = 'Quiz: ' + iverbsTopic;
 		modeBtn.innerHTML = 'Learn';
 		answerForm.style.visibility = 'visible';
 		totalResult.style.display = 'none';
 		totalAttempt.style.display = 'block';
-		playBtns.style.display = 'none';
+		player.style.display = 'none';
 		updateQuizWord();
 	}
 }
@@ -129,12 +134,14 @@ function switchMode() {
 function playLearning() {
 	if (objAudio.paused) {
 		objAudio.play();
-		playBtn.textContent = "Pause";
+//		playBtn.textContent = "Pause";
+		playBtn.style.backgroundImage = "url(\"data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><rect x='3' y='4' width='5' height='13' fill='silver' stroke='grey' stroke-width='2' /><rect x='12' y='4' width='5' height='13' fill='silver' stroke='grey' stroke-width='2' /></svg>\")";
 		playTimer = setInterval(updateLearningWords, 100);
 	}
 	else {
 		objAudio.pause();
-		playBtn.textContent = "Play";
+//		playBtn.textContent = "Play";
+		playBtn.style.backgroundImage = "url(\"data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><path d='M 3 18 L 3 4 L 17 11 L 3 18' fill='silver' stroke='grey' stroke-width='2' /></svg>\")";
 		clearInterval(playTimer);
 	}
 }
@@ -163,11 +170,13 @@ function updateTrackBar() {
 		if (objAudio.currentTime == objAudio.duration) {
 			clearInterval(playTimer);
 			objAudio.currentTime = 0;
-			playBtn.textContent = "Play";
+			objAudio.pause();
+//			playBtn.textContent = "Play";
+			playBtn.style.backgroundImage = "url(\"data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><path d='M 3 18 L 3 4 L 17 11 L 3 18' fill='silver' stroke='grey' stroke-width='2' /></svg>\")";
 		}
 		// uplate track bar
 		trackBar.innerHTML = formatTimeStr(objAudio.currentTime) + 
-			'|' + formatTimeStr(objAudio.duration);		
+			' | ' + formatTimeStr(objAudio.duration);		
 	}
 
 	// formats to '00:00:00.00'

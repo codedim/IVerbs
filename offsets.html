@@ -1,24 +1,77 @@
 <!DOCTYPE html>
 <html><head>
-<title>HTML5 Audio Player </title>	
-<!-- uncomment the meta tag if you have issues rendering this page on an intranet site. -->	
-<!-- <meta http-equiv="X-UA-Compatible" content="IE=9"/> -->
+<title>Add offsets to Array</title>	
+
+<!--  Add JS file name with word array to modify here  -->
+ <script type="text/javascript" src="iverbs.js"></script>
+<!--                                ^^^^^^^^^^^        -->
 
 <script type="text/javascript">
-var iverbs = [ [ 'see', 'saw', 'seen' ], [ 'make', 'made', 'made' ], [ 'find', 'found', 'found' ], [ 'know', 'knew', 'known' ], [ 'get', 'got', 'gotten' ], [ 'go', 'went', 'gone' ], [ 'write', 'wrote', 'written' ], [ 'think', 'thought', 'thought' ], [ 'come', 'came', 'come' ], [ 'take', 'took', 'taken' ], [ 'put', 'put', 'put' ], [ 'tell', 'told', 'told' ], [ 'give', 'gave', 'given' ], [ 'read', 'read', 'read' ], [ 'keep', 'kept', 'kept' ], [ 'begin', 'began', 'begun' ], [ 'let', 'let', 'let' ], [ 'hear', 'heard', 'heard' ], [ 'cut', 'cut', 'cut' ], [ 'eat', 'ate', 'eaten' ], [ 'run', 'ran', 'run' ], [ 'bring', 'brought', 'brought' ], [ 'become', 'became', 'become' ], [ 'grow', 'grew', 'grown' ], [ 'draw', 'drew', 'drawn' ], [ 'show', 'showed', 'shown' ], [ 'mean', 'meant', 'meant' ], [ 'feel', 'felt', 'felt' ], [ 'hold', 'held', 'held' ], [ 'stand', 'stood', 'stood' ], [ 'understand', 'understood', 'understood' ], [ 'lose', 'lost', 'lost' ], [ 'catch', 'caught', 'caught' ], [ 'buy', 'bought', 'bought' ], [ 'send', 'sent', 'sent' ], [ 'fall', 'fell', 'fallen' ], [ 'choose', 'chose', 'chosen' ], [ 'sleep', 'slept', 'slept' ], [ 'speak', 'spoke', 'spoken' ], [ 'meet', 'met', 'met' ], [ 'lead', 'led', 'led' ], [ 'bite', 'bit', 'bitten' ], [ 'hit', 'hit', 'hit' ], [ 'drive', 'drove', 'driven' ], [ 'break', 'broke', 'broken' ], [ 'sit', 'sat', 'sat' ], [ 'spend', 'spent', 'spent' ], [ 'ring', 'rang', 'rung' ], [ 'wear', 'wore', 'worn' ], [ 'sell', 'sold', 'sold' ], [ 'beat', 'beat', 'beaten' ], [ 'win', 'won', 'won' ], [ 'hurt', 'hurt', 'hurt' ], [ 'sing', 'sang', 'sung' ], [ 'blow', 'blew', 'blown' ], [ 'rise', 'rose', 'risen' ], [ 'ride', 'rode', 'ridden' ], [ 'fly', 'flew', 'flown' ], [ 'drink', 'drank', 'drunk' ], [ 'forget', 'forgot', 'forgotten' ], [ 'throw', 'threw', 'thrown' ], [ 'hang', 'hung', 'hung' ], [ 'swim', 'swam', 'swum' ] ];
-var currentFile = ''; // global var to track current file name
-var playTimer;
+var words =  iverbs ; 	// ! Specify your array name here //
+//          ^^^^^^^^
 
+var currentFile = ''; 	// global var to track current file name
+var playTimer;			// global var to manage track bar
+
+// fill out the 'array' items on startup
 window.onload = function() {
 	updateTrackBar();
 
 	var array = document.getElementById('array');
-	if (array) for (i = 0; iverbs.length; ++i) {
-		array.innerHTML += '[ \'' + iverbs[i][0] + '\', \'' + iverbs[i][1] + 
-			'\', \'' + iverbs[i][2] + '\', * ], ';
+	if (array) {
+		array.innerHTML += '[ ';
+		for (i = 0; i < words.length; ++i) {
+			var endList = (i == words.length - 1) ? '\', * ] ];' : 
+				'\', * ], ';
+			array.innerHTML += '[ \'' + words[i][0] + '\', \'' + 
+				words[i][1] + '\', \'' + words[i][2] + endList;
+		}
+		highlightNextItem();
 	}
 }
 
+// highlights current array item
+function highlightNextItem() {
+	var array = document.getElementById('array');
+	if (!array) return;
+	var preStr, postStr, text = array.innerHTML;
+	var indxOpen = text.indexOf('<u>');
+	var indxClose = text.indexOf('</u>');
+
+	if (indxOpen > 0) {
+		// remove <u>-</u> tags
+		preStr = text.substr(0, text.indexOf('<u>'));
+		postStr = text.substr(text.indexOf('<u>') + 3, text.length);
+		text = preStr + postStr;
+		preStr = text.substr(0, text.indexOf('</u>'));
+		postStr = text.substr(text.indexOf('</u>') + 4, text.length);
+
+		// if it is not the last item
+		if (indxClose < text.length - 8) {
+			array.innerHTML = preStr;
+			text = postStr;
+			addHighlight();
+		} else {
+			array.innerHTML = preStr + postStr;
+		}
+	// no <u>-</u> tags, it is the first item to highlight
+	} else {
+		array.innerHTML = '';
+		addHighlight();
+	}
+
+	function addHighlight() {
+		// add <u>-</u> tags
+		preStr = text.substr(0, text.indexOf(' [ '));
+		postStr = text.substr(text.indexOf(' [ ') + 3, text.length);
+		text = preStr + ' <u>[ ' + postStr;
+		preStr = text.substr(0, text.indexOf('* ]'));
+		postStr = text.substr(text.indexOf('* ]') + 3, text.length);
+		array.innerHTML += preStr + '* ]</u>' + postStr;
+	}
+}
+
+// replaces '*' symbol with current audio file play-time value
 function addOffset() {
 	var array = document.getElementById('array');
 	var objAudio = document.getElementById('audioTag');
@@ -35,6 +88,7 @@ function addOffset() {
 				offset = offset.substr(0, indx) + offset.substr(indx, 3);
 		}
 		array.innerHTML = preStr + offset + postStr;
+		highlightNextItem();
 	}
 }
 
@@ -97,7 +151,6 @@ function updateTrackBar() {
 	}
 }
 
-
 // rewinds the audio file by 30 seconds
 function rewindAudio() {
 	if (!window.HTMLAudioElement) return;
@@ -110,7 +163,7 @@ function rewindAudio() {
 	}
 }
 
-// fast forwards the audio file by 30 seconds.
+// forwards the audio file by 30 seconds
 function forwardAudio() {
 	if (!window.HTMLAudioElement) return;
 	try {
@@ -136,8 +189,30 @@ function restartAudio() {
 }
 </script>
 </head><body>
+<p style="font-size: 80%">
+	This script will help you if you want to create your own Learn & Quiz 
+	topic. Prepare two files before you start. The first one is a JS array 
+	that consists of words you wish to Learn & Quiz. Use UTF-8 codepage if 
+	you need non-English characters in your exercise. The second file is a 
+	continuous MP3 file with prononciation examples of the words from the 
+	JS array. Note: You must provide a correct-formatted word array, that 
+	should look like the following, all the blank spaces are required: 
+	<code style="font-size: 110%; color: #336">[ [ '1st_word_to_show', 
+	'1st_word_to_quiz' ], [ '2nd_word_to_show', '2nd_word_to_quiz' ] ];
+	</code>
+</p>
+<p style="font-size: 80%">
+	Once you are ready to proceed, edit this script by providing of your 
+	MP3 & JS file names and name of the word array from your JS file. The 
+	content of the array will appear as soon as you have updated the webpage. 
+	Then start playing audio and press the "Add offset" button to add the 
+	word's offsets to the array. As you press the button, the asterisk symbol 
+	in underlinded array item will be replaced with current time-offset from 
+	audio player. Finally, replace the obtained array with time-stamps in 
+	your JS file.
+</p>
 <p>
-	<input type="text" id="audioFile" size="60" value="iverbs.mp3" />
+	<input type="text" id="audioFile" size="64" value="iverbs.mp3" />
 </p>
 <p>
 	<audio id="audioTag">HTML5 audio not supported</audio>
@@ -148,7 +223,7 @@ function restartAudio() {
 	<code id="trackBar"></code>
 </p>
 <p>
-	<button onclick="addOffset();">addOffset</button>
+	<button onclick="addOffset();">Add offset</button>
 </p>
 <code><div id="array"></div></code>
 </body></html>
