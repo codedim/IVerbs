@@ -30,11 +30,14 @@ it is very very important to work at the pronunciation right from the beginning.
 
 Let us look at the basic structure in the language you have to master at first.
 
-        | (?) | (+) | (-)
---------|-----|-----|-----
- [...]> | Will __I, you, he, she, it, we, they__ like. | __I, you, he, she, it, we, they__ will like. | __I, you, he, she, it, we, they__ will not like.
- [...]  | Do __I, you, we, are, they__ like.   Does __he, she, it__ like. | __I, you, we, they__ like.   __He, she, it__ likes. | __I, you, we, they__ do not like   __He, she, it__ does not like.
-<[...]  | Did __I, you, he, she, it, we, they__ like. | __I, you, he, she, it, we, they__ liked. | __I, you, he, she, it, we, they__ did not like.
+            | (?) | (+) | (-)
+----    ----|-----|-----|-----
+**_[...]>** | Will *I, you, he, she, it, we, they* like. | *I, you, he, she, it, we, they* will like. | *I, you, he, she, it, we, they* will not like.
+**_[...]_** | Do *I, you, we, are, they* like.   
+Does *he, she, it* like. | *I, you, we, they* like.   
+*He, she, it* likes. | *I, you, we, they* do not like   
+*He, she, it* does not like.
+**<[...]_** | Did *I, you, he, she, it, we, they* like. | *I, you, he, she, it, we, they* liked. | *I, you, he, she, it, we, they* did not like.
 
 
 With these skills you will be able to compose quite a lot of English sentences and 
