@@ -28,7 +28,12 @@ sounds.
 > Note. If you want to become a fluent English speaker and listener in the future, 
 it is very very important to work at the pronunciation right from the beginning.
 
-Let us look at the basic structure in the language you have to master at first.
+Look at the basic grammar structures in the language you have to master at first.
+
+> Let's make arrangements to mark the **interrogative**, **affirmative** and 
+**negative** statements with the **(?)**, **(+)** and **(-)** conventions -- and 
+**future**, **present** and **past** tenses with the **>[...]>**, **>[...]<** and 
+**<[...]<** conventions.
 
             | (?) | (+) | (-)
 ------------|-----|-----|-----
