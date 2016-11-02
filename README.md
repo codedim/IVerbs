@@ -2,17 +2,20 @@ IVerbs
 ======
 
 **IVerbs** is a web-based application that was initially intended to help somebody 
-who learn English to get through the commonly used **irregular verbs**. But,..
+who learn English to get through the commonly used irregular verbs. But,..
+
+English learning
+----------------
 	
 Let me discourse about the English language generally, before you proceed with 
 it. Why do many people learn English for? What might this studing bring to a 
 foreign-language person?
 
-Someone says, English needs me to get a new job or promotion. The other one always 
-wish traveling without any language barriers. The best answer, I believe, is to get 
-the great opportunity to interact with the most large and popular social environment 
-in the World. And to be just in touch with the mainstream is the best reason for that 
-motivation, I think.
+Someone might say, English needed me to get a new job or promotion. The other one 
+always wish traveling without any language barriers. I believe, the best answer is 
+to achieve the great opportunity to interact with the most large and popular social 
+environment in the World. And to be just in touch with the mainstream is the best 
+reason for motivation.
 
 But, what do you have to do, as a beginner, to get a certain success with yours 
 English learning? There are a few common classic steps to do that, which as follow
@@ -23,7 +26,16 @@ English learning? There are a few common classic steps to do that, which as foll
 sounds. 
 
 > Note. If you want to become a fluent English speaker and listener in the future, 
-it is very very important to work at the pronunciation right from the start.
+it is very very important to work at the pronunciation right from the beginning.
+
+Let us look at the basic structure in the language you have to master at first.
+
+        | (?) | (+) | (-)
+--------|-----|-----|-----
+ [...]> | Will __I, you, he, she, it, we, they__ like. | __I, you, he, she, it, we, they__ will like. | __I, you, he, she, it, we, they__ will not like.
+ [...]  | Do __I, you, we, are, they__ like.   Does __he, she, it__ like. | __I, you, we, they__ like.   __He, she, it__ likes. | __I, you, we, they__ do not like   __He, she, it__ does not like.
+<[...]  | Did __I, you, he, she, it, we, they__ like. | __I, you, he, she, it, we, they__ liked. | __I, you, he, she, it, we, they__ did not like.
+
 
 With these skills you will be able to compose quite a lot of English sentences and 
 somehow communicate with English-speaking people. But, will you understand them 
@@ -38,9 +50,10 @@ You are going to be able to manage with following things
 * listening -- well understanding of the fluent speech;
 * speaking -- the skill to speak in a fluent manner as well.
 
-Those things are not so easy to learn actually. But, I have is a small advice for 
-you about, how to get those skills more quickly. Here it is. You should reduce the 
-influence on these processes of your native language as much as possible! 
+Those things are not so easy to learn actually. But, I have this a small advice for 
+you about, how to get those skills more quickly and efficiently. Here it is. You 
+should reduce the influence on these processes of your native language as much as 
+possible! 
 
 The best way for it is the removal into an English-speaking country and living 
 there for a couple of years. But, to put it mildly, this way is not to be accepted 
@@ -48,8 +61,8 @@ by everybody.
 
 But, how can we achieve the immersion in the forain language without leaving from 
 our country? We should probably use our computers and mobile devices to get it. 
-This is the really simplest way in present time, so the Internet and Google services 
-will help us with that.
+This is the really simplest way in present time, so the Internet and Google's 
+services will help us with that.
 
 For example, you might to download some English books on your mobile device and 
 read them when you have time. The best experience for beginners will bring the 
