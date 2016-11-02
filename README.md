@@ -32,12 +32,9 @@ Let us look at the basic structure in the language you have to master at first.
 
             | (?) | (+) | (-)
 ------------|-----|-----|-----
-**_[...]>** | Will *I, you, he, she, it, we, they* like. | *I, you, he, she, it, we, they* will like. | *I, you, he, she, it, we, they* will not like.
-**_[...]_** | Do *I, you, we, are, they* like.   
-Does *he, she, it* like. | *I, you, we, they* like.   
-*He, she, it* likes. | *I, you, we, they* do not like   
-*He, she, it* does not like.
-**<[...]_** | Did *I, you, he, she, it, we, they* like. | *I, you, he, she, it, we, they* liked. | *I, you, he, she, it, we, they* did not like.
+**>[...]>** | Will *I, you, he, she, it, we, they* like. | *I, you, he, she, it, we, they* will like. | *I, you, he, she, it, we, they* will not like.
+**>[...]<** | Do *I, you, we, are, they* like. Does *he, she, it* like. | *I, you, we, they* like. *He, she, it* likes. | *I, you, we, they* do not like. *He, she, it* does not like.
+**<[...]<** | Did *I, you, he, she, it, we, they* like. | *I, you, he, she, it, we, they* liked. | *I, you, he, she, it, we, they* did not like.
 
 
 With these skills you will be able to compose quite a lot of English sentences and 
