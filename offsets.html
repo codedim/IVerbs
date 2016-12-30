@@ -3,11 +3,11 @@
 <title>Add offsets to Array</title>	
 
 <!--  Add JS file name with word array to modify here  -->
- <script type="text/javascript" src="iverbs.js"></script>
+ <script type="text/javascript" src="iverbs2.js"></script>
 <!--                                ^^^^^^^^^^^        -->
 
 <script type="text/javascript">
-var words =  iverbs ; 	// ! Specify your array name here //
+var words =  iverbs2 ; 	// ! Specify your array name here //
 //          ^^^^^^^^
 
 var currentFile = ''; 	// global var to track current file name
@@ -75,12 +75,15 @@ function highlightNextItem() {
 function addOffset() {
 	var array = document.getElementById('array');
 	var objAudio = document.getElementById('audioTag');
+	var startOffset = parseFloat(document.getElementById('startOffset').value);
+	if (startOffset == NaN) startOffset = 0.0;
+
 	var indx = array.innerHTML.indexOf('*');
 	if (indx > 0) {
 		var preStr = array.innerHTML.substr(0, indx);
 		var postStr = array.innerHTML.substr(indx + 1, 
 			array.innerHTML.length);
-		var offset = objAudio.currentTime;
+		var offset = startOffset + objAudio.currentTime;
 		if (offset > 0) {
 			offset = String(offset);
 			indx = offset.indexOf('.');
@@ -189,14 +192,20 @@ function restartAudio() {
 }
 </script>
 </head><body>
+<p style="font-size: 90%; font-weight: bold">
+	How to use?
+</p>
 <p style="font-size: 80%">
 	This script will help you if you want to create your own Learn & Quiz 
 	topic. Prepare two files before you start. The first one is a JS array 
 	that consists of words you wish to Learn & Quiz. Use UTF-8 codepage if 
-	you need non-English characters in your exercise. The second file is a 
-	continuous MP3 file with prononciation examples of the words from the 
-	JS array. Note: You must provide a correct-formatted word array, that 
-	should look like the following, all the blank spaces are required: 
+	you need non-English characters in your exercise. 
+</p>
+<p style="font-size: 80%">
+	The second file is a continuous MP3 file with prononciation examples of 
+	the words from the 	JS array. Note: You must provide a correct-formatted 
+	word array, that should look like the following, all the blank spaces are 
+	required: <br>
 	<code style="font-size: 110%; color: #336">[ [ '1st_word_to_show', 
 	'1st_word_to_quiz' ], [ '2nd_word_to_show', '2nd_word_to_quiz' ] ];
 	</code>
@@ -205,14 +214,24 @@ function restartAudio() {
 	Once you are ready to proceed, edit this script by providing of your 
 	MP3 & JS file names and name of the word array from your JS file. The 
 	content of the array will appear as soon as you have updated the webpage. 
-	Then start playing audio and press the "Add offset" button to add the 
-	word's offsets to the array. As you press the button, the asterisk symbol 
-	in underlinded array item will be replaced with current time-offset from 
-	audio player. Finally, replace the obtained array with time-stamps in 
-	your JS file.
+	You can add also start offset (in seconds) to be added to your values 
+	if you need. 
+</p>
+<p style="font-size: 80%">
+	Then press the "Add offset" button to mark offset of the fiest word group, 
+	start playing audio and press the "Add offset" button each time when a 
+	speaker ends prononce the current group of words to add the next offset 
+	to the array. As you press the button, the asterisk symbol in underlinded 
+	array item will be replaced with current time-offset from audio player. 
+	Finally, replace the obtained array with time-stamps in your JS file.
+</p>
+<hr>
+<p style="font-size: 90%; font-weight: bold">
+	MP3 file to play / start offset (s):
 </p>
 <p>
-	<input type="text" id="audioFile" size="64" value="iverbs.mp3" />
+	<input type="text" id="audioFile" size="54" value="iverbs.mp3" />
+	<input type="number" id="startOffset" size="10" value="0" />
 </p>
 <p>
 	<audio id="audioTag">HTML5 audio not supported</audio>

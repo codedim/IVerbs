@@ -30,7 +30,8 @@
  button#mode { width: 100%; font-size: 11pt }
  #audioTag { color: #e00; }
 </style>
-<script type="text/javascript" src="iverbs.js"></script>
+<script type="text/javascript" src="iverbs1.js"></script>
+<script type="text/javascript" src="iverbs2.js"></script>
 </head><body>
 
 <div id="quiz">
@@ -72,8 +73,17 @@ var modeBtn =  document.getElementById('mode');
 var player = document.getElementById('player');
 var playBtn = document.getElementById('playBtn');
 var objAudio = document.getElementById('audioTag');
-objAudio.src = 'iverbs.mp3';
 var stopTimer, playTimer;
+
+// selecting the source
+objAudio.src = 'iverbs1.mp3';
+var iverbs = iverbs1;
+var iverbsTopic = iverbsTopic1;
+/*
+objAudio.src = 'iverbs2.mp3';
+var iverbs = iverbs2;
+var iverbsTopic = iverbsTopic2;
+*/
 
 var keyFlag; // "enter was pressed on the element" flag
 var wordNmb = -1;
