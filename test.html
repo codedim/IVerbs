@@ -1,0 +1,92 @@
+<!DOCTYPE html><html><head>
+
+<style>
+body { font-family: sans-serif }
+
+#ivMenuBtn {
+	width: 28px;
+	height: 30px;
+	left: 300px;
+	position: absolute;
+	border: 1px solid grey; 
+	padding-left: 4px;
+}
+
+#ivMenuBtn div {
+	width: 4px;
+	height: 18px;
+	border: 1px solid grey;
+	background-color: #eee; 
+	position: relative;
+	float: left;
+	margin: 5px 1px;
+}
+
+ul#ivMenu {
+	list-style-type: none;
+	position: absolute;
+	top: 39px;
+	border: 1px solid grey;
+	padding: 4px 8px;
+	margin: 0;
+	display: none;
+}
+
+ul#ivMenu a { 
+	text-decoration: none;
+	color: dark-blue;
+}
+
+ul#ivMenu li {
+	border-bottom: 1px dotted grey;
+	margin: 2px;
+	padding-bottom: 4px;
+}
+
+ul#ivMenu li.lastItem {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+</style>
+
+
+</head><body>
+
+<a href="#" onclick="showMenu()"><div id="ivMenuBtn">
+ <div></div><div></div><div></div>
+</div></a>
+<ul id="ivMenu"><li>
+ <a href="#" onclick="menuItem(1)">Learn irregular verbs (elementary)</a>
+</li><li>
+ <a href="#" onclick="menuItem(2)">Quiz irregular verbs (elementary)</a>
+</li><li>
+ <a href="#" onclick="menuItem(3)">Learn irregular verbs (intermediate)</a>
+</li><li>
+ <a href="#" onclick="menuItem(4)">Quiz irregular verbs (intermediate)</a>
+</li><li class="lastItem">
+ <a href="#" onclick="menuItem(5)">Mute sounds (switch the player off)</a>
+</li></ul>
+
+
+<script>
+function showMenu() {
+	var menu = document.getElementById('ivMenu');
+	var menuBtn = document.getElementById('ivMenuBtn');
+
+	if (menu.style.display == 'none' || menu.style.display == '') {
+		menu.style.display = 'block';
+		menu.style.left = (menuBtn.offsetLeft + menuBtn.clientWidth - 
+			menu.clientWidth) + 'px';
+	} else {
+		menu.style.display = 'none';
+	}
+}
+
+function menuItem(item) {
+	document.getElementById('ivMenu').style.display = 'none';
+
+	alert(item);
+}
+</script>
+
+</body></html>

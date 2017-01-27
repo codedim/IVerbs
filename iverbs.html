@@ -4,58 +4,161 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <style>
- body { font-family: sans-serif }
- input, h4 { font-size: 12pt; font-weight: bold }
- h3, h4 { margin: 10px 0px 5px; text-align: center }
- #player { position: absolute; width: 300px; display: none; }
- #playBtn { 
- 	height: 24px;
+body { font-family: sans-serif }
+
+input, h4 { 
+	font-size: 12pt; 
+	font-weight: bold 
+}
+
+h3 { 
+	margin: 10px 0px 5px; 
+	text-align: left;
+}
+
+h4 { 
+	margin: 10px 0px 5px; 
+	text-align: center;
+}
+
+#player { 
+	position: absolute; 
+	width: 300px; 
+	display: none; 
+}
+
+#playBtn { 
+ 	height: 30px;
+	width: 32px;
 	background-position: center;
 	background-repeat: no-repeat;
 }
- #rewBtn { float: left }
- #frwBtn { float: right }
- #word { color: #337 }
- #correct, #total { color: #333; }
- .badAns { color: red }
- .goodAns { color: green }
- #totals { display: none }
- #fixme { display: none }
- div#quiz, div#learn { 
+
+#bckBtn { float: left }
+#frwBtn { float: right }
+
+#word { color: #337 }
+#translation { 
+	color: #777;
+	display: none; 
+}
+
+#correct, #total { color: #333; }
+
+.badAns { color: red }
+.goodAns { color: green }
+
+#totals { display: none }
+
+#fixme { display: none }
+
+div#quiz, div#learn { 
  	display: inline-block; width: 300px; 
  	padding: 6px;
+ 	padding-bottom: 10px;
  	background-color: #eee; 
- }
- button#mode { width: 100%; font-size: 11pt }
- #audioTag { color: #e00; }
+}
+
+button#mode { width: 100%; font-size: 11pt }
+
+#audioTag { color: #e00; }
+
+#ivMenuBtn {
+	width: 28px;
+	height: 30px;
+	left: 280px;
+	position: absolute;
+	border: 1px solid grey; 
+	padding-left: 4px;
+}
+
+#ivMenuBtn div {
+	width: 4px;
+	height: 18px;
+	border: 1px solid grey;
+	background-color: #ddd; 
+	position: relative;
+	z-index: 100;
+	float: left;
+	margin: 5px 1px;
+}
+
+ul#ivMenu {
+	list-style-type: none;
+	position: absolute;
+	top: 45px;
+	border: 1px solid grey;
+	padding: 4px 8px;
+	margin: 0;
+	display: none;
+	z-index: 100;
+	background-color: #eee; 
+}
+
+ul#ivMenu a { 
+	text-decoration: none;
+	color: dark-blue;
+}
+
+ul#ivMenu li {
+	border-bottom: 1px dotted grey;
+	margin: 2px;
+	padding-bottom: 4px;
+}
+
+ul#ivMenu li.menuOption {
+	list-style-type: square;
+	list-style-position: inside;	
+}
+
+ul#ivMenu li.lastItem {
+	border-bottom: none;
+	padding-bottom: 0;
+}
 </style>
 <script type="text/javascript" src="iverbs1.js"></script>
 <script type="text/javascript" src="iverbs2.js"></script>
 </head><body>
 
 <div id="quiz">
-<h3 id="caption">Quiz: English irregular verbs</h3>
-<h4 id="word"></h4>
-<form id="answer" method="post" onsubmit="return updateQuizWord()">
-<input type="text" id="ps" size="10" maxlength="12" autocomplete="off" name="PastSimple" />
-<input type="text" id="pp" size="10" maxlength="12" autocomplete="off" name="PastParticiple" />
-<input type="submit" value="&gt;" />
-</form>
-<div id="player">
- <button id="playBtn" onclick="playLearning();">&nbsp;&nbsp;</button>
- &nbsp;&nbsp;<code id="trackBar"></code><p>
- <button id="rewBtn" onclick="rewindAudio();">&lt;&lt;</button>
- <button id="frwBtn" onclick="forwardAudio();">&gt;&gt;</button>
-</div>
-<h4 id="correct">&nbsp; <span class=""></span> <span class=""></span></h4>
-<h4 id="attempts">Attempts: <span id="at" class="goodAns">0</span>&nbsp;&nbsp;
- Errors: <span id="er" class="badAns">0</span>&nbsp;&nbsp;
- <a id="fixme" href="javascript:void(0)" onclick="fixMistakes()">correct</a></h4>
-<h4 id="totals">Word: <span id="cw" class="goodAns">0</span>&nbsp;&nbsp;
- Total: <span id="tw" class="goodAns">0</span></h4>
-<p><button id="mode" onclick="switchMode();">Learn</button>
+ <a href="#" onclick="showMenu()"><div id="ivMenuBtn">
+  <div></div><div></div><div></div>
+ </div></a>
+ <ul id="ivMenu"><li>
+  <a href="#" onclick="menuItem(1)">Learn irregular verbs (elementary)</a>
+ </li><li>
+  <a href="#" onclick="menuItem(2)">Quiz irregular verbs (elementary)</a>
+ </li><li>
+  <a href="#" onclick="menuItem(3)">Learn irregular verbs (intermediate)</a>
+ </li><li>
+  <a href="#" onclick="menuItem(4)">Quiz irregular verbs (intermediate)</a>
+ </li><li class="menuOption lastItem">
+  <a href="#" id="muteSound" onclick="menuItem(5)">Mute sound</a>
+ </li></ul>
+
+ <h3 id="caption">...</h3>
+ <h4 id="word">&nbsp;</h4>
+ <h4 id="translation">&nbsp;</h4>
+ <form id="answer" method="post" onsubmit="return updateQuizWord()">
+  <input type="text" id="ps" size="10" maxlength="12" autocomplete="off" name="PastSimple" />
+  <input type="text" id="pp" size="10" maxlength="12" autocomplete="off" name="PastParticiple" />
+  <input type="submit" value="&gt;" />
+ </form>
+ <div id="player">
+  <button id="playBtn" onclick="playLearning();">&nbsp;&nbsp;</button>
+  &nbsp;&nbsp;<code id="trackBar"></code><p>
+  <button id="bckBtn" onclick="backwardAudio();">&lt;&lt;</button>
+  <button id="frwBtn" onclick="forwardAudio();">&gt;&gt;</button>
+ </div>
+ <h4 id="correct">&nbsp; <span class=""></span> <span class=""></span></h4>
+ <h4 id="attempts">Attempts: <span id="at" class="goodAns">0</span>&nbsp;&nbsp;
+  Errors: <span id="er" class="badAns">0</span>&nbsp;&nbsp;
+  <a id="fixme" href="javascript:void(0)" onclick="fixMistakes()">correct</a></h4>
+ <h4 id="totals">Word: <span id="cw" class="goodAns">0</span>&nbsp;&nbsp;
+  Total: <span id="tw" class="goodAns">0</span></h4>
 </div>
 <audio id="audioTag">HTML5 audio not supported!</audio>
+
 
 <script>
 
@@ -66,6 +169,7 @@ const PauseIcon = "url(\"data:image/svg+xml;charset=utf8,<svg xmlns='http://www.
 // DOM elements
 var caption =       document.getElementById('caption');
 var currentWord =   document.getElementById('word');
+var translation =   document.getElementById('translation');
 var correctAnswer = document.getElementById('correct');
 var totalAttempt =  document.getElementById('attempts');
 var totalResult =   document.getElementById('totals');
@@ -73,23 +177,24 @@ var answerForm =    document.getElementById('answer');
 var inputPastSimple =     document.getElementById('ps');
 var inputPastParticiple = document.getElementById('pp');
 var fixmeLink =     document.getElementById('fixme');
-var modeBtn =       document.getElementById('mode');
 var player =        document.getElementById('player');
 var playBtn =       document.getElementById('playBtn');
 var objAudio =      document.getElementById('audioTag');
 var stopTimer, playTimer; // timers
 
-// selecting the source
+// selecting the data sources
+var iverbs;
+var iverbsTopic;
+var iverbsLocal;
 /*
 objAudio.src = 'iverbs1.ogg';
-var iverbs = iverbs1;
-var iverbsTopic = iverbsTopic1;
-*/
+iverbs = iverbs1;
+iverbsTopic = iverbsTopic1;
 
 objAudio.src = 'iverbs2.ogg';
-var iverbs = iverbs2;
-var iverbsTopic = iverbsTopic2;
-
+iverbs = iverbs2;
+iverbsTopic = iverbsTopic2;
+*/
 
 // general script variables
 var keyFlag; // "enter key was pressed on element" flag
@@ -100,7 +205,8 @@ var errCount = 0;
 var errList = []; // array to store failed user answers
 var testMode = 'quiz'; // mode of the test: 'common quiz' or 'correct mistakes'
 
-// initializes the quiz mode, etc.
+
+// initializes the page on startup
 window.onload = function() {
 	caption.innerHTML = 'Quiz: ' + iverbsTopic;
 	playBtn.style.backgroundImage = PlayIcon;
@@ -112,11 +218,16 @@ window.onload = function() {
 	inputPastParticiple.onkeydown = function() {
 		keyFlag = inputPastParticiple;
 	}
+
+	if (document.cookie == '') {
+		// started for the first time or after long time
+		switchMode(1); // switch mode to 'Learn' v.1
+	}
 }
 
 // switches between 'quiz' and 'learn' modes
-function switchMode() {
-	// initialization
+function switchMode(mode) {
+	// reinitialization stuff
 	objAudio.pause();
 	objAudio.currentTime = 0;
 	clearTimeout(stopTimer);
@@ -128,23 +239,41 @@ function switchMode() {
 	errList = []; 
 	testMode = 'quiz';
 	currentWord.innerHTML = '&nbsp;';
+	translation.innerHTML = '&nbsp;';
 	correctAnswer.innerHTML = '&nbsp;';
 	fixmeLink.style.display = 'none';
 
-	if (modeBtn.innerHTML == 'Learn') {
-	// switch to Learn mode
+	// select learn and mode data version
+	if (mode == 1 || mode == 2) {
+		objAudio.src = 'iverbs1.ogg';
+		iverbs = iverbs1;
+		iverbsTopic = iverbsTopic1;
+		iverbsLocal = iverbs1ru;
+	} else if (mode == 3 || mode == 4) {
+		objAudio.src = 'iverbs2.ogg';
+		iverbs = iverbs2;
+		iverbsTopic = iverbsTopic2;
+		iverbsLocal = iverbs2ru;
+	}
+
+	// switch to learn or quiz mode
+	if (mode == 1 || mode == 3) {
+		// switch to Learn mode
 		caption.innerHTML = 'Learn: ' + iverbsTopic;
-		modeBtn.innerHTML = 'Quiz';
-		answerForm.style.visibility = 'hidden';
+//		answerForm.style.visibility = 'hidden';
+		answerForm.style.display = 'none';
+		translation.style.display = 'block';
 		totalResult.style.display = 'block';
 		totalAttempt.style.display = 'none';
 		document.getElementById('tw').innerHTML = iverbs.length;
 		player.style.display = 'block';
-	} else {
-	// switch to Quiz mode
+
+	} else if (mode == 2 || mode == 4) {
+		// switch to Quiz mode
 		caption.innerHTML = 'Quiz: ' + iverbsTopic;
-		modeBtn.innerHTML = 'Learn';
-		answerForm.style.visibility = 'visible';
+//		answerForm.style.visibility = 'visible';
+		answerForm.style.display = 'block';
+		translation.style.display = 'none';
 		totalResult.style.display = 'none';
 		totalAttempt.style.display = 'block';
 		player.style.display = 'none';
@@ -174,9 +303,11 @@ function playLearning() {
 
 // updates current playing word in the 'learn' mode
 function updateLearningWords() {
+	const nbsp = '&nbsp;&nbsp;';
 	var wordIndx = iverbs.length - 1;
 	var word = iverbs[wordIndx]; // last item from array
 
+	// search for current playing word
 	for (i = 0; i < iverbs.length - 1; ++i) 
 		if ( (iverbs[i][3] < objAudio.currentTime) && 
 			(iverbs[i + 1][3] > objAudio.currentTime) ) 
@@ -185,7 +316,19 @@ function updateLearningWords() {
 			wordIndx = i;
 		}
 
-	currentWord.innerHTML = word[0] + ' ' + word[1] + ' ' + word[2];
+	// set the global word index variable
+	if (wordNmb != wordIndx) wordNmb = wordIndx;
+	// show tree forms of the current verb
+	currentWord.innerHTML = word[0] + nbsp + word[1] + nbsp + word[2];
+	// show word translation if it exists
+	if (iverbsLocal && iverbsLocal[wordIndx][0] == word[0] &&
+		iverbsLocal[wordIndx][1].length) 
+	{
+		translation.innerHTML = iverbsLocal[wordIndx][1];
+	} else {
+		translation.innerHTML = nbsp;
+	}
+	// update current word counter and track bar
 	document.getElementById('cw').innerHTML = wordIndx + 1;
 	updateTrackBar();
 }
@@ -218,14 +361,50 @@ function updateTrackBar() {
 }
 
 // manages '<<' button
-function rewindAudio() {
-	objAudio.currentTime -= 30.0;
+function backwardAudio() {
+//	objAudio.currentTime -= 30.0;
+	rewindWord('backward');
 }
 
 // manages '>>' button
 function forwardAudio() {
-	objAudio.currentTime += 30.0;
+//	objAudio.currentTime += 30.0;
+	rewindWord('forward');
 }
+
+function rewindWord(direction) {
+	var performAction = false;
+	// stop the player if it was started
+	objAudio.pause();
+	playBtn.style.backgroundImage = PlayIcon;
+	clearInterval(playTimer);
+
+	if (direction == 'forward' && wordNmb < iverbs.length - 1) {
+		++wordNmb;
+		performAction = true;
+	} else if (direction == 'backward' && wordNmb > 0) {
+		--wordNmb;
+		performAction = true;
+	}
+	updateTrackBar();
+
+	if (performAction) {
+		if (stopTimer) clearTimeout(stopTimer);
+		objAudio.currentTime = iverbs[wordNmb][3];
+		objAudio.play();
+		playTimer = setInterval(updateLearningWords, 100);
+		
+		var duration = (wordNmb < iverbs.length - 1) ? 
+			iverbs[wordNmb + 1][3] : objAudio.duration;
+		duration -= iverbs[wordNmb][3];
+
+		stopTimer = setTimeout(function() {
+			clearInterval(playTimer);
+			objAudio.pause();
+		}, duration * 1000);
+	}		
+}
+
 
 /************************
    quiz mode functions 
@@ -311,6 +490,43 @@ function fixMistakes() {
 	testMode = 'correct';
 	fixmeLink.style.display = 'none';
 	updateQuizWord();
+}
+
+/************************
+   menu button functions 
+************************/
+
+// displayes or hides menu list
+function showMenu() {
+	var menu = document.getElementById('ivMenu');
+	var menuBtn = document.getElementById('ivMenuBtn');
+
+	if (menu.style.display == 'none' || menu.style.display == '') {
+		menu.style.display = 'block';
+		menu.style.left = (menuBtn.offsetLeft + menuBtn.clientWidth - 
+			menu.clientWidth) + 'px';
+	} else {
+		menu.style.display = 'none';
+	}
+}
+
+// processes menu item click
+function menuItem(item) {
+	document.getElementById('ivMenu').style.display = 'none';
+
+	if (item == 5) {  // mute-unmute option
+		var muteItem = document.getElementById('muteSound');
+		if (muteItem.innerHTML == 'Mute sound') {
+			muteItem.innerHTML = 'Unmute sound';
+			objAudio.muted = true;
+		} else {
+			muteItem.innerHTML = 'Mute sound';
+			objAudio.muted = false;
+		}
+//		alert(document.cookie);
+	} else {
+		switchMode(item);
+	}
 }
 
 </script> 
